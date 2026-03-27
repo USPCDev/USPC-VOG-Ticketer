@@ -1,5 +1,6 @@
 import streamlit as st
 from utils import ticketer_bg
+from contextlib import contextmanager
 
 #ticketer_bg.enable_svg_bg()
 
@@ -7,6 +8,29 @@ if st.button("Back to Home Page", icon=":material/arrow_back_ios_new:", type="pr
     if "booking_type" in st.session_state:
         del st.session_state.booking_type
     st.rerun()
+
+horizontal_style="""<style class="hide-element">
+                        .element-container:has(.hide-element) {
+                            display: none;
+                        }
+                        div[data-testid="stVerticalBlock"]:has(> .element-container .horizontal-marker) {
+                            display: flex;
+                            flex-direction: row !important;
+                            flex-wrap: wrap;
+                            gap: 0.5rem;
+                            align-items: baseline;
+                        }
+                        div[data-testid="stVerticalBlock"]:has(> .element-container .horizontal-marker) div {
+                            width: max-content !important;
+                        }
+                    </style>"""
+
+@contextmanager
+def st_horizontal():
+    st.markdown(horizontal_style, unsafe_allow_html=True)
+    with st.container():
+        st.markdown('<span class="hide-element horizontal-marker"></span>', unsafe_allow_html=True)
+        yield
 
 st.title("Single Booking")
 
